@@ -1,25 +1,20 @@
+
 import { connectDB } from "@/util/database";
 import Link from "next/link";
+import ListItem from "./ListItem";
 
 export default async function List() {
   const db = (await connectDB).db("forum"); // 데이터베이스 접속 forum db접속
   let result = await db.collection("post").find().toArray(); // post안에있는 글 array로 꺼내오기
 
+  const safeResult = result.map(post => ({
+    ...post,
+    _id: post._id.toString(),
+  }));
+
   return (
     <div className="list-bg">
-      {result.map((a, i) => (
-        <div className="list-item" key={i}>
-          <Link href={`/detail/${result[i]._id}`}>
-            <h4>{result[i].title}</h4>
-          </Link>
-
-          <p>1월 1일</p>
-          <p>{result[i].content}</p>
-          <Link href={`/edit/${result[i]._id}`} className="list-btn">
-            ✏️
-          </Link>
-        </div>
-      ))}
+      <ListItem result={safeResult}/>
     </div>
   );
 }
