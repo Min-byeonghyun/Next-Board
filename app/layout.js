@@ -11,7 +11,8 @@ export const metadata = {
 };
 
 export default async function RootLayout({ children }) {
-  let session =  await getServerSession(authOptions);
+  const session = await getServerSession(authOptions);
+
   return (
     <html lang="en">
       <body>
@@ -20,11 +21,15 @@ export default async function RootLayout({ children }) {
             Next-board
           </Link>
           <Link href="/list">List</Link>
-         {
-          session ? <span>{session.user.name }<LogOutBtn/></span> : <LoginBtn/>
-         }
-        
-         </div>
+          {session ? (
+            <span>
+              {session.user.name}
+              <LogOutBtn />
+            </span>
+          ) : (
+            <LoginBtn />
+          )}
+        </div>
         {children}
       </body>
     </html>
